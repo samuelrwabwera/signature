@@ -5,6 +5,7 @@
     <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAehJREFUeNpi/J82k4Hh/38Ghn//UPAD5e0M99V2MUxeHcAAAlM2bLD5w8BQ9I6B4eaT//8rGaCAhQENPFDZwXAfqBkZ/P//Xy3GwcF4r4lJIOOlS6/u79y5Fyi8B8WAy7xbGS7zbGWQVGbE0Pzx40fPPXv2TFi3fv21f93d739DNYMA46VCX4bL3JvhGiS1GJE0M9h//cpQqqoT6P30ycOPvvHXZhT/+FGhAvIyFDAha0a1GaLZ3a/K++/vf69PHT17WVr0d8U1RlQXMhHSfPvm1deb1m24+es3g62sxD8MtSzEav4H1XsdqGAdsgFff0CdAnQZCzOD3IOrPHaByZHee3ftfHnh7JnbMM0Hz4AwFhfADGBmYmD8+48xpaBpf21xhunC778YbgmJMLYdufAfrBkn8DCD4LZUxp5nV5f9zwliXO5nzehpos7IQAqQAnk/w59xlZQIoxeQrQrECkAsDcRiQCwIxDxAzA4NN7DpvHL6QJ02cWA2KAkAsTgQiwKxMBALADEfEHMDMScQs0E1g2KOEaTZuHw3A7NaZA8Dn7zBL3Z+iS9A9ldGRsZvQMnvQPYPIPsnkP0byP4DZP8Fsv8B2f+BbAYFr1JISgSaEgWkl0G9QjKbiYFCAHKBCzSgyAGvAAIMAHD/1dmmASuxAAAAAElFTkSuQmCC</icon>
 
     <properties>
+        <!-- Data Source -->
         <property key="dataUrl" type="attribute" required="false" isPath="optional" pathType="reference">
             <caption>Data URL</caption>
             <category>Data source</category>
@@ -13,6 +14,7 @@
                 <attributeType name="String"/>
             </attributeTypes>
         </property>
+        <!-- Pen Customization -->
         <property key="penColor" type="string" defaultValue="#000">
             <caption>Pen color</caption>
             <category>Pen Customization</category>
@@ -33,6 +35,39 @@
             <category>Pen Customization</category>
             <description>Velocity filter pressure</description>
         </property>
+
+
+        <!-- Appearance -->
+        <property key="widthUnit" type="enumeration" defaultValue="pixels">
+            <caption>Width unit</caption>
+            <category>Appearance</category>
+            <description/>
+            <enumerationValues>
+                <enumerationValue key="percentageOfParent">Percentage of parent</enumerationValue>
+                <enumerationValue key="pixels">Pixels</enumerationValue>
+            </enumerationValues>
+        </property>
+         <property key="width" type="integer" defaultValue="100">
+            <caption>Canvas width</caption>
+            <category>Appearance</category>
+            <description/>
+        </property>
+        <property key="heightUnit" type="enumeration" defaultValue="percentageOfWidth">
+            <caption>Height unit</caption>
+            <category>Appearance</category>
+            <description>'Percentage of width' is the aspect ratio, 'Pixels' is absolute. Warning: the 'Percentage of parent' only works when the parent has an absolute height, else it will not display</description>
+            <enumerationValues>
+                <enumerationValue key="percentageOfWidth">Percentage of width</enumerationValue>
+                <enumerationValue key="pixels">Pixels</enumerationValue>
+            </enumerationValues>
+        </property>
+        <property key="height" type="integer" defaultValue="75">
+            <caption>Canvas height</caption>
+            <category>Appearance</category>
+            <description/>
+        </property>
+
+        <!-- Appearance
         <property key="height" type="integer" defaultValue="500">
             <caption>Canvas height</caption>
             <category>Appearance</category>
@@ -43,6 +78,8 @@
             <category>Appearance</category>
             <description>Canvas width</description>
         </property>
+        -->
+
         <property key="showGrid" type="boolean" defaultValue="true">
             <caption>Show background grid</caption>
             <category>Appearance</category>
@@ -68,6 +105,7 @@
             <category>Appearance</category>
             <description>Border width(px)</description>
         </property>
+        <!-- Events -->
         <property key="onChangeMicroflow" type="microflow" required="false">
             <caption>Microflow</caption>
             <category>Events</category>

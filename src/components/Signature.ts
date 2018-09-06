@@ -1,4 +1,4 @@
-import { Component, createElement } from "react";
+import { CSSProperties, Component, createElement } from "react";
 import { Alert } from "./Alert";
 // tslint:disable-next-line:no-submodule-imports
 import * as SignaturePad from "signature_pad/dist/signature_pad.min";
@@ -7,7 +7,9 @@ import "../ui/Signature.scss";
 export interface SignatureProps {
     alertMessage?: string;
     height?: number;
+    heightUnit?: "percentageOfWidth" | "pixels";
     width?: number;
+    widthUnit?: "percentageOfParent" | "pixels";
     gridx?: number;
     gridy?: number;
     gridColor?: string;
@@ -17,6 +19,7 @@ export interface SignatureProps {
     minWidth?: string;
     velocityFilterWeight?: string;
     showGrid?: boolean;
+    style: object;
     onClickAction(imageUrl?: string): void;
 }
 
@@ -36,11 +39,14 @@ export class Signature extends Component<SignatureProps, SignatureState> {
 
     render() {
         return createElement("div", {
-            className: "widget-Signature signature-unset"
+            className: "widget-Signature signature-unset",
+            style: this.getStyle()
         },
             createElement("canvas", {
                 height: this.props.height,
+                heightUnit: this.props.heightUnit,
                 width: this.props.width,
+                widthUnit: this.props.widthUnit,
                 ref: this.getCanvas,
                 resize: true,
                 style: { border: this.props.gridBorder + "px solid black" }
@@ -109,5 +115,18 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         context.lineWidth = 1;
         context.strokeStyle = gridColor;
         context.stroke();
+    }
+
+    // function to set the height and width
+    private getStyle = (): object => {
+        const style: CSSProperties = {
+            width: this.props.widthUnit === "percentageOfParent" ? `${this.props.width}%` : `${this.props.width}px`
+        };
+
+        this.props.heightUnit === "percentageOfWidth" ?
+        style.height = `${this.props.height}%` :
+        style.height = `${this.props.height}px`;
+
+        return { ...style, ...this.props.style };
     }
 }

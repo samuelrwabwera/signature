@@ -9,7 +9,9 @@ interface WrapperProps {
 export interface SignatureContainerProps extends WrapperProps {
     dataUrl?: string;
     height?: number;
+    heightUnit?: "percentageOfWidth" | "pixels";
     width?: number;
+    widthUnit?: "percentageOfParent" | "pixels";
     gridx?: number;
     gridy?: number;
     gridColor?: string;
