@@ -21,30 +21,27 @@ const widgetConfig = {
     },
     module: {
         rules: [
-            { test: /\.ts$/, use: "ts-loader" },
+            { test: /\.ts$/, loader: "ts-loader" },
             { test: /\.css$/, loader: ExtractTextPlugin.extract({
                 fallback: "style-loader",
                 use: "css-loader"
             }) },
             { test: /\.scss$/, loader: ExtractTextPlugin.extract({
                 fallback: "style-loader",
-                use: "css-loader!sass-loader"
+                use: [
+                    { loader: "css-loader" },
+                    { loader: "sass-loader" }
+                ]
             }) }
         ]
     },
+    mode: "development",
     devtool: "source-map",
     externals: [ "react", "react-dom" ],
     plugins: [
-        new CopyWebpackPlugin([
-            { from: "src/**/*.js" },
-            { from: "src/**/*.xml" },
-        ], {
-            copyUnmodified: true
-        }),
+        new CopyWebpackPlugin([ { from: "src/**/*.xml" }], { copyUnmodified: true }),
         new ExtractTextPlugin({ filename: `./src/com/mendix/widget/custom/${name}/ui/${widgetName}.css` }),
-        new webpack.LoaderOptionsPlugin({
-            debug: true
-        })
+        new webpack.LoaderOptionsPlugin({ debug: true })
     ]
 };
 
@@ -60,23 +57,15 @@ const previewConfig = {
     },
     module: {
         rules: [
-            { test: /\.ts$/, loader: "ts-loader", options: {
-                compilerOptions: {
-                    "module": "CommonJS",
-                }
-            }},
-            { test: /\.css$/, use: "raw-loader" },
-            { test: /\.scss$/, use: [
-                { loader: "raw-loader" },
-                { loader: "sass-loader" }
-            ] }
+            { test: /\.ts$/, use: "ts-loader" },
+            { test: /\.scss$/, use: [ "raw-loader", "sass-loader" ]},
+            { test: /\.css$/, use: "css-loader" },
         ]
     },
+    mode: "production",
     devtool: "inline-source-map",
     externals: [ "react", "react-dom" ],
-    plugins: [
-        new webpack.LoaderOptionsPlugin({ debug: true })
-    ]
+    plugins: [ new webpack.LoaderOptionsPlugin({ debug: true }) ]
 };
 
-module.exports = [ widgetConfig, previewConfig ];
+module.exports = [ widgetConfig, previewConfig];

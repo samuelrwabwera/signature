@@ -12,6 +12,7 @@ export interface SignatureContainerProps extends WrapperProps {
     heightUnit?: "percentageOfWidth" | "pixels";
     width?: number;
     widthUnit?: "percentageOfParent" | "pixels";
+    editable?: "default" | "never";
     gridx?: number;
     gridy?: number;
     gridColor?: string;

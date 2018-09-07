@@ -10,6 +10,7 @@ export interface SignatureProps {
     heightUnit?: "percentageOfWidth" | "pixels";
     width?: number;
     widthUnit?: "percentageOfParent" | "pixels";
+    editable?: "default" | "never";
     gridx?: number;
     gridy?: number;
     gridColor?: string;
@@ -19,7 +20,8 @@ export interface SignatureProps {
     minWidth?: string;
     velocityFilterWeight?: string;
     showGrid?: boolean;
-    style: object;
+    style?: object;
+    // editSignature(): void;
     onClickAction(imageUrl?: string): void;
 }
 
@@ -39,17 +41,17 @@ export class Signature extends Component<SignatureProps, SignatureState> {
 
     render() {
         return createElement("div", {
-            className: "widget-Signature signature-unset",
-            style: this.getStyle()
+            className: "widget-Signature signature-unset"
         },
             createElement("canvas", {
                 height: this.props.height,
                 heightUnit: this.props.heightUnit,
                 width: this.props.width,
                 widthUnit: this.props.widthUnit,
+                onClick: this.editSignature,
                 ref: this.getCanvas,
                 resize: true,
-                style: { border: this.props.gridBorder + "px solid black" }
+                style: this.getStyle
             }),
             createElement("button", {
                 className: "btn btn-default",
@@ -118,15 +120,23 @@ export class Signature extends Component<SignatureProps, SignatureState> {
     }
 
     // function to set the height and width
-    private getStyle = (): object => {
+    private getStyle = () => {
         const style: CSSProperties = {
-            width: this.props.widthUnit === "percentageOfParent" ? `${this.props.width}%` : `${this.props.width}px`
+            width: this.props.widthUnit === "percentageOfParent" ? `${this.props.width}%` : `${this.props.width}px`,
+            height: this.props.heightUnit === "percentageOfWidth" ? `${this.props.height}%` : `${this.props.height}%`,
+            border: this.props.gridBorder + "px solid black"
         };
 
-        this.props.heightUnit === "percentageOfWidth" ?
-        style.height = `${this.props.height}%` :
-        style.height = `${this.props.height}px`;
+        // this.props.heightUnit === "percentageOfWidth" ?
+        // style.height = `${this.props.height}%` :
+        // style.height = `${this.props.height}px`;
 
         return { ...style, ...this.props.style };
+    }
+
+    private editSignature = () => {
+        if (this.props.editable === "default") {
+            this.signaturePad.on();
+        } else this.signaturePad.off();
     }
 }
