@@ -1,4 +1,4 @@
-import { CSSProperties, Component, createElement } from "react";
+import { Component, createElement } from "react";
 import { Alert } from "./Alert";
 // tslint:disable-next-line:no-submodule-imports
 import * as SignaturePad from "signature_pad/dist/signature_pad.min";
@@ -21,7 +21,6 @@ export interface SignatureProps {
     velocityFilterWeight?: string;
     showGrid?: boolean;
     style?: object;
-    // editSignature(): void;
     onClickAction(imageUrl?: string): void;
 }
 
@@ -44,14 +43,15 @@ export class Signature extends Component<SignatureProps, SignatureState> {
             className: "widget-Signature signature-unset"
         },
             createElement("canvas", {
-                height: this.props.height,
-                heightUnit: this.props.heightUnit,
-                width: this.props.width,
-                widthUnit: this.props.widthUnit,
                 onClick: this.editSignature,
                 ref: this.getCanvas,
                 resize: true,
-                style: this.getStyle
+                style: {
+                    ...this.props.style,
+                    height: this.getHeight(this.props.height, this.props.heightUnit),
+                    width: this.getWidth(this.props.width, this.props.widthUnit),
+                    border: this.props.gridBorder + "px solid black"
+                }
             }),
             createElement("button", {
                 className: "btn btn-default",
@@ -119,20 +119,23 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         context.stroke();
     }
 
-    // function to set the height and width
-    private getStyle = () => {
-        const style: CSSProperties = {
-            width: this.props.widthUnit === "percentageOfParent" ? `${this.props.width}%` : `${this.props.width}px`,
-            height: this.props.heightUnit === "percentageOfWidth" ? `${this.props.height}%` : `${this.props.height}%`,
-            border: this.props.gridBorder + "px solid black"
-        };
-
-        // this.props.heightUnit === "percentageOfWidth" ?
-        // style.height = `${this.props.height}%` :
-        // style.height = `${this.props.height}px`;
-
-        return { ...style, ...this.props.style };
-    }
+    // setting the width
+    private getWidth = (value: string | number, type: string) => {
+            if (type === "pixels") {
+                return value + "px";
+            } else if (type === "percentageOfParent") {
+                return value + "%";
+            }
+        }
+    // setting the height
+    private getHeight = (value: string | number, type: string) => {
+            if (type === "pixels") {
+                return value + "px";
+            } else if (type === "percentageOfWidth") {
+                const height = (this.props.height) * this.props.width;
+                return value = height + "%";
+            }
+        }
 
     private editSignature = () => {
         if (this.props.editable === "default") {
