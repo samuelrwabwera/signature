@@ -26,6 +26,7 @@ export interface SignatureProps {
 
 export interface SignatureState {
     isSet: boolean;
+    focus: boolean;
 }
 
 export class Signature extends Component<SignatureProps, SignatureState> {
@@ -35,7 +36,7 @@ export class Signature extends Component<SignatureProps, SignatureState> {
     constructor(props: SignatureProps) {
         super(props);
 
-        this.state = { isSet: false };
+        this.state = { isSet: false, focus: false };
     }
 
     render() {
@@ -43,9 +44,11 @@ export class Signature extends Component<SignatureProps, SignatureState> {
             className: "widget-Signature signature-unset"
         },
             createElement("canvas", {
-                onClick: this.editSignature,
                 ref: this.getCanvas,
                 resize: true,
+                onMouseOver: this.editSignature,
+                onFocus: this._onFocus,
+                onBlur: this._onBlur,
                 style: {
                     ...this.props.style,
                     height: this.getHeight(this.props.height, this.props.heightUnit),
@@ -70,6 +73,8 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         if (this.canvasNode) {
             this.canvasNode.style.backgroundColor = "white";
             this.signaturePad = new SignaturePad(this.canvasNode, {
+                // onFocus: this.canvasNode.style.backgroundColor = "yellow",
+                // onBlur: this.canvasNode.style.backgroundColor = "",
                 onEnd: () => { this.setState({ isSet: true }); },
                 backgroundColor: "white",
                 penColor: this.props.penColor,
@@ -140,6 +145,24 @@ export class Signature extends Component<SignatureProps, SignatureState> {
     private editSignature = () => {
         if (this.props.editable === "default") {
             this.signaturePad.on();
-        } else this.signaturePad.off();
+        } else if (this.props.editable === "never") {
+            this.signaturePad.off();
+        }
+    }
+
+    private _onFocus = () => {
+        if (!this.state.focus) {
+            this.setState({
+                focus: true
+            });
+        }
+    }
+
+    private _onBlur = () => {
+        if (this.state.focus) {
+            this.setState({
+                focus: false
+            });
+        }
     }
 }

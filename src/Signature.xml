@@ -76,20 +76,6 @@
             <category>Appearance</category>
             <description/>
         </property>
-
-        <!-- Appearance
-        <property key="height" type="integer" defaultValue="500">
-            <caption>Canvas height</caption>
-            <category>Appearance</category>
-            <description>Canvas height</description>
-        </property>
-        <property key="width" type="integer" defaultValue="500">
-            <caption>Canvas width</caption>
-            <category>Appearance</category>
-            <description>Canvas width</description>
-        </property>
-        -->
-
         <property key="showGrid" type="boolean" defaultValue="true">
             <caption>Show background grid</caption>
             <category>Appearance</category>
@@ -120,6 +106,12 @@
             <caption>Microflow</caption>
             <category>Events</category>
             <description>The microflow that will be executed on click</description>
+            <returnType type="Void" />
+        </property>
+        <property key="onChangeNanoflow" type="nanoflow" required="false">
+            <caption>Nanoflow</caption>
+            <category>Events</category>
+            <description>The nanoflow that will be executed on click</description>
             <returnType type="Void" />
         </property>
     </properties>
