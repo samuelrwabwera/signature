@@ -20,7 +20,6 @@ export interface SignatureProps {
     minWidth?: string;
     velocityFilterWeight?: string;
     showGrid?: boolean;
-    style?: object;
     onClickAction(imageUrl?: string): void;
 }
 
@@ -49,11 +48,9 @@ export class Signature extends Component<SignatureProps, SignatureState> {
                 onMouseOver: this.editSignature,
                 onFocus: this._onFocus,
                 onBlur: this._onBlur,
-                style: {
-                    height: this.getHeight(this.props.height, this.props.heightUnit),
-                    width: this.getWidth(this.props.width, this.props.widthUnit),
-                    border: this.props.gridBorder + "px solid black"
-                }
+                height: this.getHeight(this.props.height, this.props.heightUnit),
+                width: this.getWidth(this.props.width, this.props.widthUnit),
+                style: { border: this.props.gridBorder + "px solid black" }
             }),
             createElement("button", {
                 className: "btn btn-default",
