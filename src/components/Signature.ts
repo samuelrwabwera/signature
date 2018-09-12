@@ -50,7 +50,6 @@ export class Signature extends Component<SignatureProps, SignatureState> {
                 onFocus: this._onFocus,
                 onBlur: this._onBlur,
                 style: {
-                    ...this.props.style,
                     height: this.getHeight(this.props.height, this.props.heightUnit),
                     width: this.getWidth(this.props.width, this.props.widthUnit),
                     border: this.props.gridBorder + "px solid black"
@@ -109,14 +108,18 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         const context = this.canvasNode.getContext("2d") as CanvasRenderingContext2D;
         context.beginPath();
 
-        for (; x < width; x += gridx) {
-            context.moveTo(x, 0);
-            context.lineTo(x, height);
+        if (gridx !== 0) {
+            for (; x < width; x += gridx) {
+                context.moveTo(x, 0);
+                context.lineTo(x, height);
+            }
         }
 
-        for (; y < height; y += gridy) {
-            context.moveTo(0, y);
-            context.lineTo(width, y);
+        if (gridy !== 0) {
+            for (; y < height; y += gridy) {
+                context.moveTo(0, y);
+                context.lineTo(width, y);
+            }
         }
 
         context.lineWidth = 1;
@@ -125,7 +128,7 @@ export class Signature extends Component<SignatureProps, SignatureState> {
     }
 
     // setting the width
-    private getWidth = (value: string | number, type: string) => {
+    private getWidth = (value: number, type: string) => {
             if (type === "pixels") {
                 return value + "px";
             } else if (type === "percentageOfParent") {
@@ -133,12 +136,13 @@ export class Signature extends Component<SignatureProps, SignatureState> {
             }
         }
     // setting the height
-    private getHeight = (value: string | number, type: string) => {
+    private getHeight = (value: number, type: string) => {
             if (type === "pixels") {
                 return value + "px";
             } else if (type === "percentageOfWidth") {
-                const height = (this.props.height) * this.props.width;
-                return value = height + "%";
+                // const height = (this.props.width) * this.props.width;
+                // return value = height + "%";
+                return value + "%";
             }
         }
 

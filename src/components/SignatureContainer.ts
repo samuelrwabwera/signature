@@ -23,6 +23,7 @@ export interface SignatureContainerProps extends WrapperProps {
     velocityFilterWeight?: string;
     showGrid?: boolean;
     onChangeMicroflow?: string;
+    onChangeNanoflow?: string;
 }
 
 interface SignatureContainerState {
@@ -64,7 +65,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
     }
 
     private saveImage(url: string) {
-        const { mxObject, dataUrl, onChangeMicroflow } = this.props;
+        const { mxObject, dataUrl, onChangeMicroflow, onChangeNanoflow } = this.props;
 
         if (mxObject && mxObject.inheritsFrom("System.Image") && dataUrl) {
             mx.data.saveDocument(
@@ -77,6 +78,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
             );
 
             this.executeAction(onChangeMicroflow, mxObject.getGuid());
+            this.executeAction(onChangeNanoflow, mxObject.getGuid());
         } else {
             this.setState({ alertMessage: "The entity does not inherit from System Image" });
         }
