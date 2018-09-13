@@ -1,8 +1,8 @@
 import { Component, createElement } from "react";
-import { Alert } from "./Alert";
 // tslint:disable-next-line:no-submodule-imports
 import * as SignaturePad from "signature_pad/dist/signature_pad.min";
 import "../ui/Signature.scss";
+import { Alert } from "./Alert";
 
 export interface SignatureProps {
     alertMessage?: string;

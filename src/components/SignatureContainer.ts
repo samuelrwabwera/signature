@@ -2,6 +2,8 @@ import { Component, createElement } from "react";
 
 import { Signature } from "./Signature";
 
+import { Alert } from "./Alert";
+
 interface WrapperProps {
     mxObject?: mendix.lib.MxObject;
 }
@@ -19,17 +21,22 @@ export interface SignatureContainerProps extends WrapperProps {
     gridBorder?: number;
     penColor?: string;
     maxWidth?: number;
+    // microflow: string;
     minWidth?: number;
     velocityFilterWeight?: string;
     showGrid?: boolean;
+    onClickEvent?: OnClickOptions;
     onChangeMicroflow?: string;
     onChangeNanoflow?: string;
+
 }
 
 interface SignatureContainerState {
     url: string;
     alertMessage: string;
 }
+
+type OnClickOptions = "doNothing" | "showPage" | "callMicroflow" | "callNanoflow";
 
 export default class SignatureContainer extends Component<SignatureContainerProps, SignatureContainerState> {
     private subscriptionHandles: number[] = [];
@@ -39,7 +46,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
 
         this.state = {
             url: "",
-            alertMessage: ""
+            alertMessage: SignatureContainer.validateProps(this.props)
         };
 
         this.updateState = this.updateState.bind(this);
@@ -48,6 +55,9 @@ export default class SignatureContainer extends Component<SignatureContainerProp
     }
 
     render() {
+        if (this.state.alertMessage) {
+            return createElement(Alert, { bootstrapStyle: "danger", message: this.state.alertMessage });
+        }
         return createElement(Signature, {
             ...this.props as SignatureContainerProps,
             imageUrl: this.state.url,
@@ -140,6 +150,20 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         }
     }
 
+    private static validateProps(props: SignatureContainerProps): string {
+        let errorMessage = "";
+
+        if (props.onClickEvent === "callMicroflow" && !props.onChangeMicroflow) {
+            errorMessage = "A 'Microflow' is required for 'Events' 'Call a microflow'";
+        }
+
+        if (errorMessage) {
+            errorMessage = `Error in badge button configuration: ${errorMessage}`;
+        }
+
+        return errorMessage;
+}
+
     private base64toBlob(base64Uri: string): Blob {
         const byteString = atob(base64Uri.split(";base64,")[1]);
         const bufferArray = new ArrayBuffer(byteString.length);
@@ -151,4 +175,5 @@ export default class SignatureContainer extends Component<SignatureContainerProp
 
         return new Blob([ bufferArray ], { type: base64Uri.split(":")[0] });
     }
+
 }
