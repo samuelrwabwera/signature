@@ -7,7 +7,7 @@ import "../ui/Signature.scss";
 export interface SignatureProps {
     alertMessage?: string;
     height?: number;
-    heightUnit?: "percentageOfWidth" | "pixels";
+    heightUnit?: "percentageOfWidth" | "pixels" | "percentageOfParent";
     width?: number;
     widthUnit?: "percentageOfParent" | "pixels";
     editable?: "default" | "never";
@@ -18,6 +18,7 @@ export interface SignatureProps {
     penColor?: string;
     maxWidth?: string;
     minWidth?: string;
+    paddingBottom?: number;
     velocityFilterWeight?: string;
     showGrid?: boolean;
     onClickAction(imageUrl?: string): void;
@@ -40,7 +41,10 @@ export class Signature extends Component<SignatureProps, SignatureState> {
 
     render() {
         return createElement("div", {
-            className: "widget-Signature signature-unset"
+            className: "widget-Signature signature-unset",
+            style: {
+                height: this.getHeight(this.props.heightUnit)
+            }
         },
             createElement("canvas", {
                 ref: this.getCanvas,
@@ -48,9 +52,11 @@ export class Signature extends Component<SignatureProps, SignatureState> {
                 onMouseOver: this.editSignature,
                 onFocus: this._onFocus,
                 onBlur: this._onBlur,
-                height: this.getHeight(this.props.height, this.props.heightUnit),
-                width: this.getWidth(this.props.width, this.props.widthUnit),
-                style: { border: this.props.gridBorder + "px solid black" }
+                height: this.getHeight(this.props.heightUnit),
+                width: this.getWidth(this.props.widthUnit),
+                style: {
+                    border: this.props.gridBorder + "px solid black"
+                }
             }),
             createElement("button", {
                 className: "btn btn-default",
@@ -125,23 +131,23 @@ export class Signature extends Component<SignatureProps, SignatureState> {
     }
 
     // setting the width
-    private getWidth = (value: number, type: string) => {
-            if (type === "pixels") {
-                return value + "px";
-            } else if (type === "percentageOfParent") {
-                return value + "%";
-            }
+    private getWidth = (type: string) => {
+        if (type === "percentageOfParent") {
+            return `${this.props.width}%`;
+        } else if (type === "pixels") {
+            return `${this.props.width}px`;
         }
+    }
     // setting the height
-    private getHeight = (value: number, type: string) => {
-            if (type === "pixels") {
-                return value + "px";
-            } else if (type === "percentageOfWidth") {
-                // const height = (this.props.width) * this.props.width;
-                // return value = height + "%";
-                return value + "%";
-            }
+    private getHeight = (type: string) => {
+        if (type === "percentageOfParent") {
+            return `${this.props.height}%`;
+        } else if (type === "percentageOfWidth") {
+            return `${this.props.height}%`;
+        } else if (type === "pixels") {
+            return `${this.props.height}px`;
         }
+    }
 
     private editSignature = () => {
         if (this.props.editable === "default") {
