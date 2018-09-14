@@ -6,9 +6,11 @@ import { Alert } from "./Alert";
 
 interface WrapperProps {
     mxObject?: mendix.lib.MxObject;
+    mxform?: mxui.lib.form._FormBase;
 }
 
 export interface SignatureContainerProps extends WrapperProps {
+    callMicroflow?: string;
     dataUrl?: string;
     height?: number;
     heightUnit?: "percentageOfWidth" | "pixels";
@@ -75,6 +77,8 @@ export default class SignatureContainer extends Component<SignatureContainerProp
     }
 
     private saveImage(url: string) {
+
+        setTimeout(this.executeMicroflow, 3000);
         const { mxObject, dataUrl, onChangeMicroflow, onChangeNanoflow } = this.props;
 
         if (mxObject && mxObject.inheritsFrom("System.Image") && dataUrl) {
@@ -150,6 +154,20 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         }
     }
 
+    private executeMicroflow() {
+        mx.data.action({
+            params: {
+                applyto: "selection",
+                actionname: this.props.callMicroflow
+            },
+            origin: this.props.mxform,
+            callback: undefined,
+            error: (error) => {
+                mx.ui.error(error.message);
+            }
+        });
+    }
+
     private static validateProps(props: SignatureContainerProps): string {
         let errorMessage = "";
 
@@ -158,7 +176,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         }
 
         if (errorMessage) {
-            errorMessage = `Error in badge button configuration: ${errorMessage}`;
+            errorMessage = `Error in signature configuration: ${errorMessage}`;
         }
 
         return errorMessage;
