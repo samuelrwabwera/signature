@@ -3,7 +3,6 @@ import { Component, createElement } from "react";
 import * as SignaturePad from "signature_pad/dist/signature_pad.min";
 import "../ui/Signature.scss";
 import { Alert } from "./Alert";
-
 export interface SignatureProps {
     alertMessage?: string;
     height?: number;
