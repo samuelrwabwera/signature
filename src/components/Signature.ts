@@ -162,6 +162,7 @@ export class Signature extends Component<SignatureProps, SignatureState> {
             this.setState({
                 focus: true
             });
+            this.canvasNode.style.backgroundColor = "yellow";
         }
     }
 
