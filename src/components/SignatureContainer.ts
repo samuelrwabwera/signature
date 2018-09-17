@@ -77,10 +77,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
     }
 
     private saveImage(url: string) {
-
-        setTimeout(this.executeMicroflow, 3000);
         const { mxObject, dataUrl, onChangeMicroflow, onChangeNanoflow } = this.props;
-
         if (mxObject && mxObject.inheritsFrom("System.Image") && dataUrl) {
             mx.data.saveDocument(
                 mxObject.getGuid(),
@@ -154,19 +151,19 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         }
     }
 
-    private executeMicroflow() {
-        mx.data.action({
-            params: {
-                applyto: "selection",
-                actionname: this.props.callMicroflow
-            },
-            origin: this.props.mxform,
-            callback: undefined,
-            error: (error) => {
-                mx.ui.error(error.message);
-            }
-        });
-    }
+    // private executeMicroflow() {
+    //     mx.data.action({
+    //         params: {
+    //             applyto: "selection",
+    //             actionname: this.props.callMicroflow
+    //         },
+    //         origin: this.props.mxform,
+    //         callback: undefined,
+    //         error: (error) => {
+    //             mx.ui.error(error.message);
+    //         }
+    //     });
+    // }
 
     private static validateProps(props: SignatureContainerProps): string {
         let errorMessage = "";
@@ -193,5 +190,4 @@ export default class SignatureContainer extends Component<SignatureContainerProp
 
         return new Blob([ bufferArray ], { type: base64Uri.split(":")[0] });
     }
-
 }

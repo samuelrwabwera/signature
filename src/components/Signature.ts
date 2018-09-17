@@ -3,6 +3,7 @@ import { Component, createElement } from "react";
 import * as SignaturePad from "signature_pad/dist/signature_pad.min";
 import "../ui/Signature.scss";
 import { Alert } from "./Alert";
+
 export interface SignatureProps {
     alertMessage?: string;
     height?: number;
@@ -49,6 +50,7 @@ export class Signature extends Component<SignatureProps, SignatureState> {
                 ref: this.getCanvas,
                 resize: true,
                 onMouseOver: this.editSignature,
+                onClick: this.timeOut,
                 onFocus: this._onFocus,
                 onBlur: this._onBlur,
                 height: this.getHeight(this.props.heightUnit),
@@ -171,5 +173,9 @@ export class Signature extends Component<SignatureProps, SignatureState> {
                 focus: false
             });
         }
+    }
+
+    private timeOut = () => {
+            setTimeout(this.getDataUrl, 5000);
     }
 }

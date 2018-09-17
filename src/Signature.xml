@@ -109,15 +109,7 @@
             <description>The microflow that will be executed on click</description>
             <returnType type="Void" />
         </property>
-         <property key="firstIntervalAttr" type="attribute" required="false">
-            <caption>First tick delay</caption>
-            <category>Context</category>
-            <description>An optional attribute on the context entity, indicating a custom first interval (in milliseconds). This could be used for continuing a timer that ticks once per minute, but should wait for 60 seconds thereafter.</description>
-            <attributeTypes>
-                <attributeType name="Integer"/>
-            </attributeTypes>
-        </property>
-         <property key="onClickEvent" type="enumeration" defaultValue="doNothing">
+        <property key="onClickEvent" type="enumeration" defaultValue="doNothing">
             <caption>On click</caption>
             <category>Events</category>
             <description/>
