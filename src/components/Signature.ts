@@ -177,5 +177,6 @@ export class Signature extends Component<SignatureProps, SignatureState> {
 
     private timeOut = () => {
             setTimeout(this.getDataUrl, 5000);
+            this.signaturePad.off();
     }
 }
