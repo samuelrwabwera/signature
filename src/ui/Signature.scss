@@ -1,4 +1,4 @@
-.widget-Signature {
+.form-control mx-textarea-input mx-textarea mx-textarea-input-noresize {
     canvas {
         position: relative;
         left: 0px;
@@ -6,7 +6,11 @@
         max-width: none;
         display: block;
         margin: 0 auto;
-        width: 100%;
+        width: 10%;
+        color: #808080;
+        cursor: not-allowed;
+        background-color: rgb(59, 7, 7);
+        opacity: 1;
     }
 
     button.btn {

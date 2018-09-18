@@ -41,7 +41,7 @@ export class Signature extends Component<SignatureProps, SignatureState> {
 
     render() {
         return createElement("div", {
-            className: "widget-Signature signature-unset",
+            className: "form-control mx-textarea-input mx-textarea mx-textarea-input-noresize",
             style: {
                 height: this.getHeight(this.props.heightUnit)
             }
