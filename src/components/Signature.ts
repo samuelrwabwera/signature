@@ -21,6 +21,7 @@ export interface SignatureProps {
     paddingBottom?: number;
     velocityFilterWeight?: string;
     showGrid?: boolean;
+    handleEvents?: VoidFunction;
     onClickAction(imageUrl?: string): void;
 }
 
@@ -50,7 +51,6 @@ export class Signature extends Component<SignatureProps, SignatureState> {
                 ref: this.getCanvas,
                 resize: true,
                 onMouseOver: this.editSignature,
-                onClick: this.timeOut,
                 onFocus: this._onFocus,
                 onBlur: this._onBlur,
                 height: this.getHeight(this.props.heightUnit),
@@ -91,6 +91,7 @@ export class Signature extends Component<SignatureProps, SignatureState> {
 
     private getDataUrl = () => {
         this.props.onClickAction(this.signaturePad.toDataURL());
+        this.signaturePad.off();
     }
 
     private getCanvas = (node: HTMLCanvasElement) => {
@@ -153,6 +154,7 @@ export class Signature extends Component<SignatureProps, SignatureState> {
     private editSignature = () => {
         if (this.props.editable === "default") {
             this.signaturePad.on();
+            setTimeout(this.getDataUrl, 5000);
         } else if (this.props.editable === "never") {
             this.signaturePad.off();
         }
@@ -173,9 +175,5 @@ export class Signature extends Component<SignatureProps, SignatureState> {
                 focus: false
             });
         }
-    }
-
-    private timeOut = () => {
-            setTimeout(this.getDataUrl, 5000);
     }
 }

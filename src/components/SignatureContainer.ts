@@ -173,7 +173,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         }
 
         if (errorMessage) {
-            errorMessage = `Error in signature configuration: ${errorMessage}`;
+            errorMessage = `Error in widget configuration: ${errorMessage}`;
         }
 
         return errorMessage;
