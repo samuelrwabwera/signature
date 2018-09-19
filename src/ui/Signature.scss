@@ -1,24 +1,31 @@
-.widget-Signature {
+.form-control {
     canvas {
-        position: relative;
-        left: 0px;
-        right: 0px;
-        max-width: none;
-        display: block;
-        margin: 0 auto;
+    left: 0px;
+    right: 0px;
+    max-width: none;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto;
     }
 
     button.btn {
-        width: 100px;
-        margin-top: 10px;
+    width: 100px;
+    margin-top: 10px;
     }
 
     button.btn.btn-primary {
-        float: right;
+    float: right;
     }
 
-    &.signature-unset {
-        float: left;
-        clear: left;
+    &.mx-textarea-input {
+    float: left;
+    clear: left;
+    display: block;
+    width: auto;
+    height: auto;
+    padding: 8px 10px;
+    border-radius: 4px;
+    position: relative;
+
     }
-}
+    }

@@ -42,7 +42,8 @@ export class Signature extends Component<SignatureProps, SignatureState> {
 
     render() {
         return createElement("div", {
-            className: "widget-Signature signature-unset",
+
+            className: "form-control mx-textarea-input",
             style: {
                 height: this.getHeight(this.props.heightUnit)
             }
@@ -177,7 +178,6 @@ export class Signature extends Component<SignatureProps, SignatureState> {
     private timeOut = () => {
         if (this.props.editable === "default") {
             setTimeout(this.getDataUrl, 5000);
-<<<<<<< HEAD
             this.signaturePad.off();
         } else if (this.props.editable === "never") {
             this.signaturePad.off();
@@ -191,7 +191,5 @@ export class Signature extends Component<SignatureProps, SignatureState> {
             this.canvasNode.style.cursor = "not-allowed";
             return "rgb(238,238,238)"; // Silver
         }
-=======
->>>>>>> style canvas as mendix textarea"
     }
 }
