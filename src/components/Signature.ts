@@ -1,16 +1,16 @@
 import { Component, createElement } from "react";
 // tslint:disable-next-line:no-submodule-imports
-import * as SignaturePad from "signature_pad/dist/signature_pad.min";
+import * as SignaturePad from "signature_pad/dist/signature_pad.min"; // TODO: import from lib
 import "../ui/Signature.scss";
 import { Alert } from "./Alert";
 
 export interface SignatureProps {
     alertMessage?: string;
     height?: number;
-    heightUnit?: "percentageOfWidth" | "pixels" | "percentageOfParent";
+    heightUnit?: string;
     width?: number;
-    widthUnit?: "percentageOfParent" | "pixels";
-    editable?: "default" | "never";
+    widthUnit?: string;
+    editable?: string;
     gridx?: number;
     gridy?: number;
     gridColor?: string;
@@ -51,6 +51,7 @@ export class Signature extends Component<SignatureProps, SignatureState> {
                 ref: this.getCanvas,
                 resize: true,
                 onMouseOver: this.editSignature,
+                onClick: this.timeOut,
                 onFocus: this._onFocus,
                 onBlur: this._onBlur,
                 height: this.getHeight(this.props.heightUnit),
@@ -74,12 +75,10 @@ export class Signature extends Component<SignatureProps, SignatureState> {
 
     componentDidMount() {
         if (this.canvasNode) {
-            this.canvasNode.style.backgroundColor = "white";
+            // this.canvasNode.style.backgroundColor = this.setbackgroundColor();
             this.signaturePad = new SignaturePad(this.canvasNode, {
-                // onFocus: this.canvasNode.style.backgroundColor = "yellow",
-                // onBlur: this.canvasNode.style.backgroundColor = "",
                 onEnd: () => { this.setState({ isSet: true }); },
-                backgroundColor: "white",
+                backgroundColor: this.setbackgroundColor(),
                 penColor: this.props.penColor,
                 velocityFilterWeight: this.props.velocityFilterWeight,
                 maxWidth: this.props.maxWidth,
@@ -152,10 +151,8 @@ export class Signature extends Component<SignatureProps, SignatureState> {
     }
 
     private editSignature = () => {
-        if (this.props.editable === "default") {
-            this.signaturePad.on();
-            setTimeout(this.getDataUrl, 5000);
-        } else if (this.props.editable === "never") {
+        if (this.props.editable === "never") {
+            this.canvasNode.style.cursor = "not-allowed";
             this.signaturePad.off();
         }
     }
@@ -174,6 +171,24 @@ export class Signature extends Component<SignatureProps, SignatureState> {
             this.setState({
                 focus: false
             });
+        }
+    }
+
+    private timeOut = () => {
+        if (this.props.editable === "default") {
+            setTimeout(this.getDataUrl, 5000);
+            this.signaturePad.off();
+        } else if (this.props.editable === "never") {
+            this.signaturePad.off();
+        }
+    }
+
+    private setbackgroundColor = () => {
+        if (this.props.editable === "default") {
+            return "rgba(255,255,255)"; // white
+        } else {
+            this.canvasNode.style.cursor = "not-allowed";
+            return "rgb(238,238,238)"; // Silver
         }
     }
 }
