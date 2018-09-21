@@ -7,6 +7,7 @@ import { Alert } from "./Alert";
 interface WrapperProps {
     mxObject?: mendix.lib.MxObject;
     mxform?: mxui.lib.form._FormBase;
+    style?: string;
 }
 
 export interface SignatureContainerProps extends WrapperProps {
@@ -99,6 +100,10 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         return mxObject ? mxObject.get(attributeName) as string : "";
     }
 
+    componentWillUnmount() {
+        this.subscriptionHandles.forEach(window.mx.data.unsubscribe);
+    }
+
     private resetSubscriptions(mxObject?: mendix.lib.MxObject) {
         this.subscriptionHandles.forEach(window.mx.data.unsubscribe);
         this.subscriptionHandles = [];
@@ -150,20 +155,6 @@ export default class SignatureContainer extends Component<SignatureContainerProp
             });
         }
     }
-
-    // private executeMicroflow() {
-    //     mx.data.action({
-    //         params: {
-    //             applyto: "selection",
-    //             actionname: this.props.callMicroflow
-    //         },
-    //         origin: this.props.mxform,
-    //         callback: undefined,
-    //         error: (error) => {
-    //             mx.ui.error(error.message);
-    //         }
-    //     });
-    // }
 
     private static validateProps(props: SignatureContainerProps): string {
         let errorMessage = "";
