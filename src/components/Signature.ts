@@ -18,6 +18,7 @@ export interface SignatureProps {
     penColor?: string;
     maxWidth?: string;
     minWidth?: string;
+    onLoseFocus?: string;
     paddingBottom?: number;
     velocityFilterWeight?: string;
     showGrid?: boolean;
@@ -42,22 +43,14 @@ export class Signature extends Component<SignatureProps, SignatureState> {
 
     render() {
         return createElement("div", {
-
             className: "form-control mx-textarea-input",
-            style: {
-                height: this.getHeight(this.props.heightUnit)
-            }
+            height: this.getHeight(this.props.heightUnit),
+            width: this.getWidth(this.props.widthUnit)
         },
             createElement("canvas", {
                 ref: this.getCanvas,
                 resize: true,
-                onMouseOver: this.editSignature,
-                onClick: this.timeOut,
-                // onfocusout: this.focusOption,
-                // onfocus: this._onFocus,
-                // onBlur: this._onBlur,
-                height: this.getHeight(this.props.heightUnit),
-                width: this.getWidth(this.props.widthUnit),
+                onMouseOver: this.disableSignaturePad,
                 style: {
                     border: this.props.gridBorder + "px solid black"
                 }
@@ -79,7 +72,7 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         if (this.canvasNode) {
             this.canvasNode.style.backgroundColor = this.setbackgroundColor();
             this.signaturePad = new SignaturePad(this.canvasNode, {
-                onEnd: () => { this.setState({ isSet: true }); },
+                onEnd: () => { this._onBlur(); this.setState({ isSet: true }); },
                 backgroundColor: this.setbackgroundColor(),
                 penColor: this.props.penColor,
                 velocityFilterWeight: this.props.velocityFilterWeight,
@@ -91,7 +84,6 @@ export class Signature extends Component<SignatureProps, SignatureState> {
     }
     private getDataUrl = () => {
         this.props.onClickAction(this.signaturePad.toDataURL());
-        this.signaturePad.off();
     }
 
     private getCanvas = (node: HTMLCanvasElement) => {
@@ -131,18 +123,8 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         context.strokeStyle = gridColor;
         context.stroke();
     }
-    // private focusOption = () => {
-    //     this.canvasNode.addEventListener("focus", (event) => {
-    //         event.target.style.addEventListener = "pink";
-    //       }, true);
-    //     this.canvasNode.addEventListener("blur", (event) => {
-    //         event.target.style.background = "";
-    //       }, true);
-    // }
-
-    // setting the width
     private getWidth = (type: string) => {
-        if (type === "percentageOfParent") {
+        if (type === "percentage") {
             return `${this.props.width}%`;
         } else if (type === "pixels") {
             return `${this.props.width}px`;
@@ -153,44 +135,36 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         if (type === "percentageOfParent") {
             return `${this.props.height}%`;
         } else if (type === "percentageOfWidth") {
-            return `${this.props.height}%`;
+            if (this.props.widthUnit === "percentage") {
+                const heightValue = (this.props.height / 100) * (this.props.width / 100);
+                return heightValue;
+            } else {
+                const heightValue = (this.props.height / 100) * (this.props.width);
+                return `${heightValue}px`;
+            }
         } else if (type === "pixels") {
             return `${this.props.height}px`;
         }
     }
 
-    private editSignature = () => {
+    private disableSignaturePad = () => {
         if (this.props.editable === "never") {
             this.canvasNode.style.cursor = "not-allowed";
             this.signaturePad.off();
         }
     }
 
-    // private _onFocus = () => {
-    //     if (this.state.focus) {
-    //         this.setState({
-    //             focus: true
-    //         });
-    //         this.canvasNode.style.backgroundColor = "yellow";
+    // private timeOut = (): any => {
+    //     if (this.props.editable === "default") {
+    //         // tslint:disable-next-line:no-empty
+    //         if (!this.state.initialClick ? this.setState({ initialClick: true }) : () => { }) {
+    //             setTimeout(this.getDataUrl, 5000);
+    //             this.signaturePad.off();
+    //         }
+    //     } else if (this.props.editable === "never") {
+    //         this.signaturePad.off();
     //     }
     // }
-
-    // private _onBlur = () => {
-    //     if (this.state.focus) {
-    //         this.setState({
-    //             focus: false
-    //         });
-    //     }
-    // }
-
-    private timeOut = () => {
-        if (this.props.editable === "default") {
-            setTimeout(this.getDataUrl, 5000);
-            this.signaturePad.off();
-        } else if (this.props.editable === "never") {
-            this.signaturePad.off();
-        }
-    }
 
     private setbackgroundColor = () => {
         if (this.props.editable === "default") {
@@ -198,6 +172,11 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         } else {
             this.canvasNode.style.cursor = "not-allowed";
             return "rgb(238,238,238)"; // Silver
+        }
+    }
+    private _onBlur = () => {
+        if (this.props.onLoseFocus === "saveOnChange" && this.props.onClickAction) {
+            setTimeout(this.getDataUrl, 5000);
         }
     }
 }

@@ -14,9 +14,9 @@ export interface SignatureContainerProps extends WrapperProps {
     callMicroflow?: string;
     dataUrl?: string;
     height?: number;
-    heightUnit?: "percentageOfWidth" | "pixels";
+    heightUnit?: "percentageOfWidth" | "pixels" | "percentageOfParent";
     width?: number;
-    widthUnit?: "percentageOfParent" | "pixels";
+    widthUnit?: "percentage" | "pixels";
     editable?: "default" | "never";
     gridx?: number;
     gridy?: number;
@@ -26,6 +26,7 @@ export interface SignatureContainerProps extends WrapperProps {
     maxWidth?: number;
     // microflow: string;
     minWidth?: number;
+    onLoseFocus?: "saveOnFormCommit" | "saveOnChange";
     velocityFilterWeight?: string;
     showGrid?: boolean;
     onClickEvent?: OnClickOptions;
@@ -39,7 +40,7 @@ interface SignatureContainerState {
     alertMessage: string;
 }
 
-type OnClickOptions = "doNothing" | "showPage" | "callMicroflow" | "callNanoflow";
+export type OnClickOptions = "doNothing" | "showPage" | "callMicroflow" | "callNanoflow";
 
 export default class SignatureContainer extends Component<SignatureContainerProps, SignatureContainerState> {
     private subscriptionHandles: number[] = [];
@@ -78,7 +79,6 @@ export default class SignatureContainer extends Component<SignatureContainerProp
     }
 
     private saveImage(url: string) {
-
         const { mxObject, dataUrl, onChangeMicroflow } = this.props;
         if (mxObject && mxObject.inheritsFrom("System.Image") && dataUrl) {
             mx.data.saveDocument(
@@ -89,7 +89,6 @@ export default class SignatureContainer extends Component<SignatureContainerProp
                 () => { mx.ui.info("Image has been saved", false); },
                 error => { mx.ui.error(error.message, false); }
             );
-
             this.executeAction(onChangeMicroflow, mxObject.getGuid());
         } else {
             this.setState({ alertMessage: "The entity does not inherit from System Image" });
@@ -168,7 +167,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         }
 
         return errorMessage;
-}
+    }
 
     private base64toBlob(base64Uri: string): Blob {
         const byteString = atob(base64Uri.split(";base64,")[1]);

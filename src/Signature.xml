@@ -53,7 +53,7 @@
             <category>Appearance</category>
             <description/>
             <enumerationValues>
-                <enumerationValue key="percentageOfParent">Percentage of parent</enumerationValue>
+                <enumerationValue key="percentage">Percentage</enumerationValue>
                 <enumerationValue key="pixels">Pixels</enumerationValue>
             </enumerationValues>
         </property>
@@ -125,6 +125,15 @@
             <category>Events</category>
             <description>The nanoflow that will be executed on click</description>
             <returnType type="Void" />
+        </property>
+        <property key="onLoseFocus" type="enumeration" defaultValue="saveOnFormCommit">
+        <caption>Lose Focus</caption>
+        <category>Events</category>
+        <description>What to do on lose focus</description>
+            <enumerationValues>
+                <enumerationValue key="saveOnChange">Save on change</enumerationValue>
+                <enumerationValue key="saveOnFormCommit">Save on form commit</enumerationValue>
+            </enumerationValues>
         </property>
     </properties>
 </widget>
