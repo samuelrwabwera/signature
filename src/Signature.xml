@@ -69,7 +69,7 @@
             <enumerationValues>
                 <enumerationValue key="percentageOfWidth">Percentage of width</enumerationValue>
                 <enumerationValue key="pixels">Pixels</enumerationValue>
-                <enumerationValue key="percentageOfParent">Percentage of parent</enumerationValue>
+                <enumerationValue key="percentage">Percentage</enumerationValue>
             </enumerationValues>
         </property>
         <property key="height" type="integer" defaultValue="75">

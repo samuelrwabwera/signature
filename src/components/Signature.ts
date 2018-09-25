@@ -42,17 +42,13 @@ export class Signature extends Component<SignatureProps, SignatureState> {
 
     render() {
         return createElement("div", {
-
-            className: "form-control mx-textarea-input",
-            style: {
-                height: this.getHeight(this.props.heightUnit)
-            }
+            className: "form-control mx-textarea-input"
         },
             createElement("canvas", {
                 ref: this.getCanvas,
                 resize: true,
                 onMouseOver: this.editSignature,
-                onClick: this.timeOut,
+                onclick: this.focusOption,
                 // onfocusout: this.focusOption,
                 // onfocus: this._onFocus,
                 // onBlur: this._onBlur,
@@ -131,18 +127,22 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         context.strokeStyle = gridColor;
         context.stroke();
     }
-    // private focusOption = () => {
-    //     this.canvasNode.addEventListener("focus", (event) => {
-    //         event.target.style.addEventListener = "pink";
-    //       }, true);
-    //     this.canvasNode.addEventListener("blur", (event) => {
-    //         event.target.style.background = "";
-    //       }, true);
-    // }
+
+    // add option lose focus
+    private focusOption = () => {
+    const focus = document.querySelector(".form-control mx-textarea-input");
+    focus.addEventListener("focusin", () => {
+    focus.classList.add("focused");
+    });
+    focus.addEventListener("focusout", () => {
+    focus.classList.remove("focused");
+    });
+
+    }
 
     // setting the width
     private getWidth = (type: string) => {
-        if (type === "percentageOfParent") {
+        if (type === "percentage") {
             return `${this.props.width}%`;
         } else if (type === "pixels") {
             return `${this.props.width}px`;
@@ -166,32 +166,14 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         }
     }
 
-    // private _onFocus = () => {
-    //     if (this.state.focus) {
-    //         this.setState({
-    //             focus: true
-    //         });
-    //         this.canvasNode.style.backgroundColor = "yellow";
+    // private timeOut = () => {
+    //     if (this.props.editable === "default") {
+    //         setTimeout(this.getDataUrl, 5000);
+    //         this.signaturePad.off();
+    //     } else if (this.props.editable === "never") {
+    //         this.signaturePad.off();
     //     }
     // }
-
-    // private _onBlur = () => {
-    //     if (this.state.focus) {
-    //         this.setState({
-    //             focus: false
-    //         });
-    //     }
-    // }
-
-    private timeOut = () => {
-        if (this.props.editable === "default") {
-            setTimeout(this.getDataUrl, 5000);
-            this.signaturePad.off();
-        } else if (this.props.editable === "never") {
-            this.signaturePad.off();
-        }
-    }
-
     private setbackgroundColor = () => {
         if (this.props.editable === "default") {
             return "rgba(255,255,255)"; // white
