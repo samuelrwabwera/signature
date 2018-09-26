@@ -12,9 +12,12 @@ interface WrapperProps {
 
 export interface SignatureContainerProps extends WrapperProps {
     callMicroflow?: string;
+    callNanoflow?: string;
+    showPage?: string;
+    page?: string;
     dataUrl?: string;
     height?: number;
-    heightUnit?: "percentageOfWidth" | "pixels" | "percentageOfParent";
+    heightUnit?: "percentageOfWidth" | "percentageOfParent" | "pixels";
     width?: number;
     widthUnit?: "percentage" | "pixels";
     editable?: "default" | "never";
@@ -31,7 +34,8 @@ export interface SignatureContainerProps extends WrapperProps {
     showGrid?: boolean;
     onClickEvent?: OnClickOptions;
     onChangeMicroflow?: string;
-    onChangeNanoflow?: string;
+    onChangeNanoflow?: Nanoflow;
+    openPageAs?: PageLocation;
 
 }
 
@@ -41,8 +45,15 @@ interface SignatureContainerState {
 }
 
 export type OnClickOptions = "doNothing" | "showPage" | "callMicroflow" | "callNanoflow";
+type PageLocation = "content"| "popup" | "modal";
+
+interface Nanoflow {
+    nanoflow: any[];
+    paramsSpec: { Progress: string };
+}
 
 export default class SignatureContainer extends Component<SignatureContainerProps, SignatureContainerState> {
+    signaturePad: any;
     private subscriptionHandles: number[] = [];
 
     constructor(props: SignatureContainerProps) {
@@ -90,6 +101,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
                 error => { mx.ui.error(error.message, false); }
             );
             this.executeAction(onChangeMicroflow, mxObject.getGuid());
+            this.executeNanoflow();
         } else {
             this.setState({ alertMessage: "The entity does not inherit from System Image" });
         }
@@ -145,6 +157,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
     private executeAction(actionName: string, guid: string) {
         if (actionName && guid) {
             window.mx.ui.action(actionName, {
+                callback: () => this.timeOut(),
                 error: (error) =>
                     window.mx.ui.error(`Error while executing microflow ${actionName}: ${error.message}`),
                 params: {
@@ -154,30 +167,62 @@ export default class SignatureContainer extends Component<SignatureContainerProp
             });
         }
     }
+    private executeNanoflow() {
+        const { mxform, mxObject, onChangeNanoflow } = this.props;
+        const context = new window.mendix.lib.MxContext();
+
+        context.setContext(mxObject.getEntity(), mxObject.getGuid());
+
+        if (this.props.onClickEvent === "callNanoflow" && onChangeNanoflow.nanoflow && mxform && this.context) {
+            window.mx.data.callNanoflow({
+                nanoflow: onChangeNanoflow,
+                origin: mxform,
+                context,
+                error: (error) =>
+                    window.mx.ui.error(`Error while executing the nanoflow: ${error.message}`)
+            });
+        } else if (this.props.onClickEvent === "showPage" && this.props.page) {
+            window.mx.ui.openForm(this.props.page, {
+                error: error => window.mx.ui.error(`Error while opening page ${this.props.page}: ${error.message}`),
+                location: this.props.openPageAs
+            });
+        }
+    }
+
+    private timeOut = () => {
+    if (this.props.editable === "default") {
+        setTimeout(this.executeAction, 5000);
+        this.signaturePad.off();
+    } else if (this.props.editable === "never") {
+        this.signaturePad.off();
+    }
+}
 
     private static validateProps(props: SignatureContainerProps): string {
-        let errorMessage = "";
+    let errorMessage = "";
 
-        if (props.onClickEvent === "callMicroflow" && !props.onChangeMicroflow) {
-            errorMessage = "A 'Microflow' is required for 'Events' 'Call a microflow'";
-        }
-
-        if (errorMessage) {
-            errorMessage = `Error in widget configuration: ${errorMessage}`;
-        }
-
-        return errorMessage;
+    if (props.onClickEvent === "callMicroflow" && !props.onChangeMicroflow) {
+        errorMessage = "A 'Microflow' is required for 'Events' 'Call a microflow'";
+    } else if (props.onClickEvent === "callNanoflow" && !props.onChangeNanoflow.nanoflow) {
+        errorMessage = "A 'Nanoflow' is required for 'Events' 'Call a nanoflow'";
+    } else if (props.onClickEvent === "showPage" && !props.page) {
+        errorMessage = "A 'Page' is required for 'Events' 'Show a page'";
     }
+    if (errorMessage) {
+        errorMessage = `Error in signature configuration: ${errorMessage}`;
+    }
+    return errorMessage;
+}
 
     private base64toBlob(base64Uri: string): Blob {
-        const byteString = atob(base64Uri.split(";base64,")[1]);
-        const bufferArray = new ArrayBuffer(byteString.length);
-        const uintArray = new Uint8Array(bufferArray);
+    const byteString = atob(base64Uri.split(";base64,")[1]);
+    const bufferArray = new ArrayBuffer(byteString.length);
+    const uintArray = new Uint8Array(bufferArray);
 
-        for (let i = 0; i < byteString.length; i++) {
-            uintArray[i] = byteString.charCodeAt(i);
-        }
-
-        return new Blob([ bufferArray ], { type: base64Uri.split(":")[0] });
+    for (let i = 0; i < byteString.length; i++) {
+        uintArray[i] = byteString.charCodeAt(i);
     }
+
+    return new Blob([ bufferArray ], { type: base64Uri.split(":")[0] });
+}
 }

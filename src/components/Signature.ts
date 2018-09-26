@@ -165,7 +165,6 @@ export class Signature extends Component<SignatureProps, SignatureState> {
     //         this.signaturePad.off();
     //     }
     // }
-
     private setbackgroundColor = () => {
         if (this.props.editable === "default") {
             return "rgba(255,255,255)"; // white
