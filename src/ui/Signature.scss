@@ -1,26 +1,26 @@
-.form-control {
-    canvas {
-    left: 10px;
-    right: 100px;
-    max-width: none;
-    border-radius: 4px;
-    display: block;
-    margin:  auto;
+.widget-signature-wrapper {
+    position: relative;
+
+    // .widget-signature {
+    // top: 0; bottom: 0; left: 0; right: 0;
+    // position: absolute;
+
+        > canvas {
+            left: 0px;
+            right: 0px;
+            max-width: none;
+            display: block;
+            margin: 0 auto;
+            float: left;
+            clear: left;
+        }
     }
 
     button.btn {
-    width: 100px;
-    margin-top: 10px;
+        width: 100px;
+        margin-top: 10px;
     }
 
     button.btn.btn-primary {
-    float: right;
+        float: right;
     }
-
-    &.mx-textarea-input {
-    
-    padding: 8px 10px;
-    border-radius: 4px;
-    position: relative;
-    }
-}

@@ -57,12 +57,12 @@
                 <enumerationValue key="pixels">Pixels</enumerationValue>
             </enumerationValues>
         </property>
-         <property key="width" type="integer" defaultValue="100">
+         <property key="width" type="integer" defaultValue="500">
             <caption>Canvas width</caption>
             <category>Appearance</category>
             <description/>
         </property>
-        <property key="heightUnit" type="enumeration" defaultValue="percentageOfWidth">
+        <property key="heightUnit" type="enumeration" defaultValue="pixels">
             <caption>Height unit</caption>
             <category>Appearance</category>
             <description>'Percentage of width' is the aspect ratio, 'Pixels' is absolute. Warning: the 'Percentage of parent' only works when the parent has an absolute height, else it will not display</description>
@@ -72,7 +72,7 @@
                 <enumerationValue key="percentage">Percentage</enumerationValue>
             </enumerationValues>
         </property>
-        <property key="height" type="integer" defaultValue="75">
+        <property key="height" type="integer" defaultValue="500">
             <caption>Canvas height</caption>
             <category>Appearance</category>
             <description/>

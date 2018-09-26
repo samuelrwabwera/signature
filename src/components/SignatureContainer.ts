@@ -7,7 +7,6 @@ import { Alert } from "./Alert";
 interface WrapperProps {
     mxObject?: mendix.lib.MxObject;
     mxform?: mxui.lib.form._FormBase;
-    style?: string;
 }
 
 export interface SignatureContainerProps extends WrapperProps {

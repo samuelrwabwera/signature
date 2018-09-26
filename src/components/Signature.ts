@@ -1,4 +1,4 @@
-import { Component, createElement } from "react";
+import { CSSProperties, Component, createElement } from "react";
 // tslint:disable-next-line:no-submodule-imports
 import * as SignaturePad from "signature_pad/dist/signature_pad.min"; // TODO: import from lib
 import "../ui/Signature.scss";
@@ -23,31 +23,36 @@ export interface SignatureProps {
     velocityFilterWeight?: string;
     showGrid?: boolean;
     handleEvents?: VoidFunction;
+    style?: object;
     onClickAction(imageUrl?: string): void;
 }
 
 export interface SignatureState {
     isSet: boolean;
     focus: boolean;
+    isGridDrawn: boolean;
 }
 
 export class Signature extends Component<SignatureProps, SignatureState> {
     private canvasNode: HTMLCanvasElement;
     private signaturePad: any;
+    private width: number;
+    private height: number;
 
     constructor(props: SignatureProps) {
         super(props);
 
-        this.state = { isSet: false, focus: false };
+        this.state = { isSet: false, focus: false, isGridDrawn: false };
     }
 
     render() {
         return createElement("div", {
-            className: "form-control mx-textarea-input",
-            height: this.getHeight(this.props.heightUnit),
-            width: this.getWidth(this.props.widthUnit)
+            className: "widget-signature-wrapper",
+            style: this.getStyle(this.props)
         },
             createElement("canvas", {
+                width: this.width,
+                height: this.height,
                 ref: this.getCanvas,
                 resize: true,
                 onMouseOver: this.disableSignaturePad,
@@ -79,9 +84,22 @@ export class Signature extends Component<SignatureProps, SignatureState> {
                 maxWidth: this.props.maxWidth,
                 minWidth: this.props.minWidth
             });
-            if (this.props.showGrid) { this.drawGrid(); }
+
+            if (this.canvasNode.parentElement) {
+                this.height = this.canvasNode.parentElement.clientHeight;
+                this.width = this.canvasNode.parentElement.clientWidth;
+            }
+        }
+        window.addEventListener("resize", this.resizeCanvas);
+    }
+
+    componentDidUpdate() {
+        if (this.props.showGrid && !this.state.isGridDrawn) {
+            this.drawGrid();
+            this.setState({ isGridDrawn: true });
         }
     }
+
     private getDataUrl = () => {
         this.props.onClickAction(this.signaturePad.toDataURL());
     }
@@ -90,6 +108,14 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         this.canvasNode = node;
     }
 
+    private resizeCanvas = () => {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+
+        this.width = this.canvasNode.parentElement.offsetWidth * ratio;
+        this.canvasNode.getContext("2d").scale(ratio, ratio);
+        this.signaturePad.clear();
+        this.setState({ isGridDrawn: false });
+    }
     private resetCanvas = () => {
         this.signaturePad.clear();
         this.setState({ isSet: false });
@@ -123,30 +149,22 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         context.strokeStyle = gridColor;
         context.stroke();
     }
-    private getWidth = (type: string) => {
-        if (type === "percentage") {
-            return `${this.props.width}%`;
-        } else if (type === "pixels") {
-            return `${this.props.width}px`;
+    private getStyle(props: SignatureProps): object {
+        const style: CSSProperties = {
+            width: props.widthUnit === "percentage" ? `${props.width}%` : `${props.width}px`
+        };
+        if (props.heightUnit === "percentageOfWidth") {
+            style.paddingBottom = props.widthUnit === "percentage"
+                ? `${props.height}%`
+                : `${props.width / 2}px`;
+        } else if (props.heightUnit === "pixels") {
+            style.height = `${props.height}px`;
+        } else if (props.heightUnit === "percentageOfParent") {
+            style.height = `${props.height}%`;
         }
-    }
-    // setting the height
-    private getHeight = (type: string) => {
-        if (type === "percentageOfParent") {
-            return `${this.props.height}%`;
-        } else if (type === "percentageOfWidth") {
-            if (this.props.widthUnit === "percentage") {
-                const heightValue = (this.props.height / 100) * (this.props.width / 100);
-                return heightValue;
-            } else {
-                const heightValue = (this.props.height / 100) * (this.props.width);
-                return `${heightValue}px`;
-            }
-        } else if (type === "pixels") {
-            return `${this.props.height}px`;
-        }
-    }
 
+        return { ...style, ...this.props.style };
+    }
     private disableSignaturePad = () => {
         if (this.props.editable === "never") {
             this.canvasNode.style.cursor = "not-allowed";
@@ -154,17 +172,6 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         }
     }
 
-    // private timeOut = (): any => {
-    //     if (this.props.editable === "default") {
-    //         // tslint:disable-next-line:no-empty
-    //         if (!this.state.initialClick ? this.setState({ initialClick: true }) : () => { }) {
-    //             setTimeout(this.getDataUrl, 5000);
-    //             this.signaturePad.off();
-    //         }
-    //     } else if (this.props.editable === "never") {
-    //         this.signaturePad.off();
-    //     }
-    // }
     private setbackgroundColor = () => {
         if (this.props.editable === "default") {
             return "rgba(255,255,255)"; // white
