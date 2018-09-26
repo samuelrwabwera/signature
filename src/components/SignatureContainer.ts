@@ -63,18 +63,20 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         const { mxObject, dataUrl, onChangeMicroflow } = this.props;
 
         if (mxObject && mxObject.inheritsFrom("System.Image") && dataUrl) {
-            mx.data.saveDocument(
-                mxObject.getGuid(),
-                `${Math.floor(Math.random() * 1000000)}.png`,
-                { width: this.props.width, height: this.props.height },
-                this.base64toBlob(url),
-                () => { mx.ui.info("Image has been saved", false); },
-                error => { mx.ui.error(error.message, false); }
+            mx.data.saveDocument(mxObject.getGuid(), `${Math.floor(Math.random() * 1000000)}.png`, {
+                width: this.props.width, height: this.props.height },
+                this.base64toBlob(url), () => {
+                    mx.ui.info("Image has been saved", false);
+                },
+                error => {
+                    mx.ui.error(error.message, false);
+                }
             );
-
             this.executeAction(onChangeMicroflow, mxObject.getGuid());
         } else {
-            this.setState({ alertMessage: "The entity does not inherit from System Image" });
+            this.setState({
+                alertMessage: `${mxObject.getEntity()} does not inherit from "System.Image.`
+            });
         }
     }
 
@@ -134,15 +136,23 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         }
     }
 
-    private base64toBlob(base64Uri: string): Blob {
-        const byteString = atob(base64Uri.split(";base64,")[1]);
-        const bufferArray = new ArrayBuffer(byteString.length);
-        const uintArray = new Uint8Array(bufferArray);
+    private base64toBlob(base64Uri: string, contentType = "image/png", sliceSize = 512): Blob {
+        const byteCharacters = atob(base64Uri.split(";base64,")[1]);
+        const byteArrays = [];
 
-        for (let i = 0; i < byteString.length; i++) {
-            uintArray[i] = byteString.charCodeAt(i);
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
         }
 
-        return new Blob([ bufferArray ], { type: base64Uri.split(":")[0] });
+        return new Blob(byteArrays, { type: contentType });
     }
 }
