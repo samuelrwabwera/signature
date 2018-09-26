@@ -9,7 +9,7 @@ The widget implements bezier curves and velocity for the smooth drawing of the s
 * Reset button to delete signature and reset the canvas
 
 ## Configuration
-Add the widget to a dataview. Connect the data URL property to an unlimited String attribute of the dataview context object.
+Add the widget to a dataView. Connect the data URL property to an unlimited String attribute of the dataView context object.
 
 ## Demo project
 [https://signature101.mxapps.io](https://signature101.mxapps.io)
@@ -17,8 +17,7 @@ Add the widget to a dataview. Connect the data URL property to an unlimited Stri
 ## Usage
 
 ![Data source](/assets/signatureImage.gif)
-- This a simple demo which shows the signature being drawn on the signature pad.
-- After the signature is drawn, it is then captured as an image and a reset button to return the canvas back to its original state appears.
+- After the signature is drawn, on clicking the save button, then the drawn signature is saved or in case the client wants to draw a better signature then he/she has to click the reset button and then the signature pad will be cleared for another signatured to be drawn.  
 
 ### Appearance configuration
 ![Data source](/assets/Home.PNG)
@@ -37,9 +36,9 @@ Add the widget to a dataview. Connect the data URL property to an unlimited Stri
 - height unit has three values, percentage of width pixels and then percentage.
 
 ![Data source](/assets/Events.PNG)
-Under this section, this is where different actions are undertaken when an event for example an onclick event happens.
-- When a microflow is selected, then on an onclick action is triggered, a microflow will be executed.
-In the same way for the Nanoflow, onclick and it is selected, a nanoflow will be executed.
+Under this section, this is where different actions are undertaken when an event for example an onClick event happens.
+- When a microflow is selected, then on an onClick action is triggered, a microflow will be executed.
+In the same way for the Nanoflow, onClick and it is selected, a nanoflow will be executed.
 - If the client selects one of the four options that are stated under the on click section, then the selected option will be executed else, an error message will show up.
 - On Lose focus the image will be saved either automatically when save on change is selected or it will be saved using the save button when the save on form commit option is selected. 
 
@@ -50,8 +49,8 @@ In the same way for the Nanoflow, onclick and it is selected, a nanoflow will be
 * **Canvas height** - Height of writable area in pixels.
 * **Canvas width** - Width of writable area in pixels.
 * **Show background grid** - When set to yes, a grid is shown in the background of the writable area.
-* **Grid X** - The distance in pixels between gridlines in the horizontal direction.
-* **Grid Y** - The distance in pixels between gridlines in the vertical direction.
+* **Grid X** - The distance in pixels between grid lines in the horizontal direction.
+* **Grid Y** - The distance in pixels between grid lines in the vertical direction.
 * **Grid color** - HTML color code of the grid
 * **Grid border width** - Width of canvas border in pixels
 * **Data URL** - Unlimited string attribute that is used to save the signature.
@@ -60,5 +59,5 @@ In the same way for the Nanoflow, onclick and it is selected, a nanoflow will be
 * **velocityFilterWeight(float)** - Weight used to modify new velocity based on the previous    velocity. Defaults to 0.7.
 
 ## Compatibility
-The widget is usable and works smoothly in Google chrome, Internet explorer. 
+The widget is usable and works smoothly in Google chrome. 
 In Firefox by setting dom.w3c_pointer_events.enabled to “true” in about:config you can get to use the widget.(Thats if initially it was not working)
