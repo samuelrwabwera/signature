@@ -17,7 +17,8 @@ Add the widget to a dataView. Connect the data URL property to an unlimited Stri
 ## Usage
 
 ![Data source](/assets/signatureImage.gif)
-- After the signature is drawn, on clicking the save button, then the drawn signature is saved or in case the client wants to draw a better signature then he/she has to click the reset button and then the signature pad will be cleared for another signatured to be drawn.  
+- After the signature is drawn, on clicking the save button, then the drawn signature is saved or in case the client wants to draw a better signature then he/she has to click the reset button and then the signature pad will be cleared for another signatured to be drawn. 
+- When the image is saved, a pop up appears which indicates, "image saved"
 
 ### Appearance configuration
 ![Data source](/assets/Home.PNG)
