@@ -24,20 +24,32 @@ Add the widget to a dataview. Connect the data URL property to an unlimited Stri
 
 ### Appearance configuration
 ![Data source](/assets/Home.PNG)
-- This is where you select the attribute which is to hold the sigature string. The attribute must be an unlimited string.
+- This is where you select the attribute which is to hold the signature string. The attribute must be an unlimited string.
 
 ![Data source](/assets/penCustomization.PNG)
 - In the pen customization, this is where you can customize your own pen size, the pen color, the maximum and minimum pen width and the velocity pressure.
 
 ![Data source](/assets/appear.PNG)
-- The signature timeout can be set from here(time before the signature is saved to an image) and both the responsive and responsive ratio.
-- The canvas height and width can aslo be customised from here
+- The canvas height and width can also be customized from here
 - Whether to show the grid background or not, size of the x and y axis of the grid, color of the grid and the grid border size can all be customized from here.
+-A client can decide to set his/her signature pad as either default to make it editable or never which makes it non editable. 
+- the grid color is set from here too depending on the clients' wish.
+- Grid border width is too set from this portion
+- width unit has two values that is percentage or pixels
+- height unit has three values, percentage of width pixels and then percentage.
+
+![Data source](/assets/Events.PNG)
+Under this section, this is where different actions are undertaken when an event for example an onclick event happens.
+- When a microflow is selected, then on an onclick action is triggered, a microflow will be executed.
+In the same way for the Nanoflow, onclick and it is selected, a nanoflow will be executed.
+- If the client selects one of the four options that are stated under the on click section, then the selected option will be executed else, an error message will show up.
+- On Lose focus the image will be saved either automatically when save on change is selected or it will be saved using the save button when the save on form commit option is selected. 
+
 
 ### Properties
 * **Pen color** - HTML color code of the pen.
 * **Signature timeout** - Amount of milliseconds the widget will wait after the user has stopped writing before saving the signature.
-* **Canvast height** - Height of writable area in pixels.
+* **Canvas height** - Height of writable area in pixels.
 * **Canvas width** - Width of writable area in pixels.
 * **Show background grid** - When set to yes, a grid is shown in the background of the writable area.
 * **Grid X** - The distance in pixels between gridlines in the horizontal direction.
@@ -51,4 +63,4 @@ Add the widget to a dataview. Connect the data URL property to an unlimited Stri
 
 ## Compatibility
 The widget is usable and works smoothly in Google chrome, Internet explorer. 
-In Firefox by setting dom.w3c_pointer_events.enabled to “true” in about:config you can get to use the widget.(Thats if initially it wasnt working)
+In Firefox by setting dom.w3c_pointer_events.enabled to “true” in about:config you can get to use the widget.(Thats if initially it was not working)
