@@ -17,7 +17,7 @@ Add the widget to a dataView. Connect the data URL property to an unlimited Stri
 ## Usage
 
 ![Data source](/assets/signatureImage.gif)
-- After the signature is drawn, it can either be saved automatically after a timeout of three seconds by selecting the saveOnChange option or saved using the default save button when the option for saveOnFormCommit is selected. 
+- After the signature is drawn, it can either be saved automatically  if the user sets the save image as "saveOnChange" option else  it will be saved on "saveOnFormCommit". 
 
 ### Appearance configuration
 ![Data source](/assets/Home.PNG)
@@ -34,7 +34,8 @@ Add the widget to a dataView. Connect the data URL property to an unlimited Stri
 - Grid border width is too set from this portion
 - width unit has two values that is percentage or pixels
 - height unit has three values, percentage of width pixels and then percentage.
-- saving the drawn signature is automatic. it is either by selecting saveOnChange or save on form commit. 
+- saving the drawn signature is automatic after the set timeout when the option for saveOnChange is selected.
+- By selecting the saveOnFormCommit, the signature will be saved using the save button.  
 
 ![Data source](/assets/Events.PNG)
 Under this section, this is where different actions are undertaken when an event for example an onClick event happens.
