@@ -20,7 +20,7 @@ describe("Siganture", () => {
         minLineWidth: "0.5",
         velocityFilterWeight: "0.7",
         showGrid: true,
-        onClickAction: jasmine.any(Function),
+        onSignEnd: jasmine.any(Function),
         alertMessage: ""
     };
 

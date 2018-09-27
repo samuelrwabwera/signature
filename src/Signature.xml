@@ -68,6 +68,15 @@
             <category>Appearance</category>
             <description>Border width(px)</description>
         </property>
+        <property key="saveImage" type="enumeration" defaultValue="onChange">
+            <caption>Save image</caption>
+            <category>Appearance</category>
+            <description>Save signature image</description>
+            <enumerationValues>
+                <enumerationValue key="onChange">OnChange</enumerationValue>
+                <enumerationValue key="onFormCommit">OnFormCommit</enumerationValue>
+            </enumerationValues>
+        </property>
         <property key="onChangeMicroflow" type="microflow" required="false">
             <caption>Microflow</caption>
             <category>Events</category>

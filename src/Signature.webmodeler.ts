@@ -8,7 +8,7 @@ export class preview extends Component<{ SignatureContainerProps }, {}> {
     render() {
         return createElement(Signature, {
             ...this.props as SignatureProps,
-            onClickAction: () => { return; }
+            onSignEnd: () => { return; }
         });
     }
 }

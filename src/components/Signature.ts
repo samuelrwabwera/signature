@@ -17,22 +17,12 @@ export interface SignatureProps {
     minLineWidth?: string;
     velocityFilterWeight?: string;
     showGrid?: boolean;
-    onClickAction?: (imageUrl?: string) => void;
+    onSignEnd?: (imageUrl: string) => void;
 }
 
-export interface SignatureState {
-    isSet: boolean;
-}
-
-export class Signature extends Component<SignatureProps, SignatureState> {
+export class Signature extends Component<SignatureProps, {}> {
     private canvasNode: HTMLCanvasElement;
     private signaturePad: any;
-
-    constructor(props: SignatureProps) {
-        super(props);
-
-        this.state = { isSet: false };
-    }
 
     render() {
         return createElement("div", {
@@ -49,11 +39,6 @@ export class Signature extends Component<SignatureProps, SignatureState> {
                 className: "btn btn-default",
                 onClick: this.resetCanvas
             }, "Reset"),
-            createElement("button", {
-                className: "btn btn-primary",
-                onClick: () => this.getDataUrl(),
-                style: { visibility: this.state.isSet ? "visible" : "hidden" }
-            }, "Save"),
             createElement(Alert, { bootstrapStyle: "danger" }, this.props.alertMessage)
         );
     }
@@ -62,7 +47,7 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         if (this.canvasNode) {
             this.canvasNode.style.backgroundColor = "white";
             this.signaturePad = new SignaturePad(this.canvasNode, {
-                onEnd: () => { this.setState({ isSet: true }); },
+                onEnd: this.handleSignEnd,
                 backgroundColor: "white",
                 penColor: this.props.penColor,
                 velocityFilterWeight: this.props.velocityFilterWeight,
@@ -71,10 +56,6 @@ export class Signature extends Component<SignatureProps, SignatureState> {
             });
             if (this.props.showGrid) { this.drawGrid(); }
         }
-    }
-
-    private getDataUrl = () => {
-        this.props.onClickAction(this.signaturePad.toDataURL());
     }
 
     private getCanvas = (node: HTMLCanvasElement) => {
@@ -109,5 +90,13 @@ export class Signature extends Component<SignatureProps, SignatureState> {
         context.lineWidth = 1;
         context.strokeStyle = gridColor;
         context.stroke();
+    }
+
+    private handleSignEnd = () => {
+        const { onSignEnd } = this.props;
+
+        if (onSignEnd) {
+            onSignEnd(this.signaturePad.toDataURL());
+        }
     }
 }

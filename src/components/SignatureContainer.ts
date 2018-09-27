@@ -3,6 +3,7 @@ import { Component, createElement } from "react";
 import { Signature, SignatureProps } from "./Signature";
 
 interface WrapperProps {
+    mxform: mxui.lib.form._FormBase;
     mxObject?: mendix.lib.MxObject;
 }
 
@@ -14,40 +15,46 @@ export interface SignatureContainerProps extends WrapperProps {
     gridy?: number;
     gridColor?: string;
     gridBorder?: number;
-    penColor?: string;
+    saveImage: SaveImage;
     maxLineWidth?: number;
     minLineWidth?: number;
+    penColor?: string;
     velocityFilterWeight?: string;
     showGrid?: boolean;
     onChangeMicroflow?: string;
 }
 
 interface SignatureContainerState {
-    url: string;
     alertMessage: string;
+    imageBlob: Blob;
+    url: string;
 }
+
+export type SaveImage = "onChange" | "onFormCommit";
 
 export default class SignatureContainer extends Component<SignatureContainerProps, SignatureContainerState> {
     private subscriptionHandles: number[] = [];
+    private formHandle = 0;
 
     constructor(props: SignatureContainerProps) {
         super(props);
 
         this.state = {
-            url: "",
-            alertMessage: ""
+            alertMessage: "",
+            imageBlob: null,
+            url: ""
         };
 
         this.updateState = this.updateState.bind(this);
-        this.saveImage = this.saveImage.bind(this);
+        this.processEndSign = this.processEndSign.bind(this);
         this.handleValidations = this.handleValidations.bind(this);
     }
 
     render() {
         return createElement(Signature, {
             ...this.props as SignatureProps,
-            onClickAction: this.saveImage,
-            alertMessage: this.state.alertMessage
+            alertMessage: this.state.alertMessage,
+            onSignEnd: this.processEndSign
         });
     }
 
@@ -59,25 +66,43 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         });
     }
 
-    private saveImage(url: string) {
-        const { mxObject, dataUrl, onChangeMicroflow } = this.props;
+    componentWillUnmount() {
+        this.subscriptionHandles.forEach(window.mx.data.unsubscribe);
+        this.props.mxform.unlisten(this.formHandle);
+    }
+
+    private processEndSign(url: string) {
+        const { mxObject, dataUrl, saveImage } = this.props;
 
         if (mxObject && mxObject.inheritsFrom("System.Image") && dataUrl) {
-            mx.data.saveDocument(mxObject.getGuid(), `${Math.floor(Math.random() * 1000000)}.png`, {
-                width: this.props.width, height: this.props.height },
-                this.base64toBlob(url), () => {
-                    mx.ui.info("Image has been saved", false);
-                },
-                error => {
-                    mx.ui.error(error.message, false);
-                }
-            );
-            this.executeAction(onChangeMicroflow, mxObject.getGuid());
+            this.convertUrltoBlob(url);
+            if (saveImage === "onChange") {
+                setTimeout(this.saveDocument(), 3000);
+            }
         } else {
             this.setState({
                 alertMessage: `${mxObject.getEntity()} does not inherit from "System.Image.`
             });
         }
+    }
+
+    private saveDocument = () => {
+        const { height, mxObject, width } = this.props;
+
+        mx.data.saveDocument(mxObject.getGuid(), this.generateFileName(),
+            { width, height }, this.state.imageBlob, () => {
+                mx.ui.info("Image has been saved", false);
+            },
+            error => {
+                mx.ui.error(error.message, false);
+            }
+        );
+
+        this.executeAction(this.props.onChangeMicroflow, mxObject.getGuid());
+    }
+
+    private generateFileName(): string {
+        return `${Math.floor(Math.random() * 1000000)}.png`;
     }
 
     private getAttributeValue(attributeName: string, mxObject?: mendix.lib.MxObject): string {
@@ -105,6 +130,8 @@ export default class SignatureContainer extends Component<SignatureContainerProp
                 guid: mxObject.getGuid(),
                 val: true
             }));
+
+            this.formHandle = this.props.mxform.listen("commit", this.saveDocument);
         }
     }
 
@@ -136,7 +163,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
         }
     }
 
-    private base64toBlob(base64Uri: string, contentType = "image/png", sliceSize = 512): Blob {
+    private convertUrltoBlob(base64Uri: string, contentType = "image/png", sliceSize = 512) {
         const byteCharacters = atob(base64Uri.split(";base64,")[1]);
         const byteArrays = [];
 
@@ -153,6 +180,7 @@ export default class SignatureContainer extends Component<SignatureContainerProp
             byteArrays.push(byteArray);
         }
 
-        return new Blob(byteArrays, { type: contentType });
+        const imageBlob = new Blob(byteArrays, { type: contentType });
+        this.setState({ imageBlob });
     }
 }
