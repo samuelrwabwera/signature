@@ -14,16 +14,7 @@
                 <attributeType name="String"/>
             </attributeTypes>
         </property>
-        <!-- prop editable -->
-        <property key="editable" type="enumeration" defaultValue="default">
-            <caption>Editable</caption>
-            <category>Appearance</category>
-            <description/>
-            <enumerationValues>
-                <enumerationValue key="default">Default</enumerationValue>
-                <enumerationValue key="never">Never</enumerationValue>
-            </enumerationValues>
-        </property>
+
         <!-- Pen Customization -->
         <property key="penColor" type="string" defaultValue="#000">
             <caption>Pen color</caption>
@@ -48,6 +39,24 @@
 
 
         <!-- Appearance -->
+         <property key="editable" type="enumeration" defaultValue="default">
+            <caption>Editable</caption>
+            <category>Appearance</category>
+            <description/>
+            <enumerationValues>
+                <enumerationValue key="default">Default</enumerationValue>
+                <enumerationValue key="never">Never</enumerationValue>
+            </enumerationValues>
+        </property>
+         <property key="saveImage" type="enumeration" defaultValue="onChange">
+            <caption>Save image</caption>
+            <category>Appearance</category>
+            <description>Save signature image</description>
+            <enumerationValues>
+                <enumerationValue key="onChange">OnChange</enumerationValue>
+                <enumerationValue key="onFormCommit">OnFormCommit</enumerationValue>
+            </enumerationValues>
+        </property>
         <property key="widthUnit" type="enumeration" defaultValue="pixels">
             <caption>Width unit</caption>
             <category>Appearance</category>
@@ -126,14 +135,32 @@
             <description>The nanoflow that will be executed on click</description>
             <returnType type="Void" />
         </property>
-        <property key="onLoseFocus" type="enumeration" defaultValue="saveOnFormCommit">
-        <caption>Lose Focus</caption>
-        <category>Events</category>
-        <description>What to do on lose focus</description>
+        <property key="afterSignEvent" type="enumeration" defaultValue="doNothing">
+            <caption>After sign</caption>
+            <category>Events</category>
+            <description/>
             <enumerationValues>
-                <enumerationValue key="saveOnChange">Save on change</enumerationValue>
-                <enumerationValue key="saveOnFormCommit">Save on form commit</enumerationValue>
+                <enumerationValue key="doNothing">Do nothing</enumerationValue>
+                <enumerationValue key="callMicroflow">Call a microflow</enumerationValue>
+                <enumerationValue key="callNanoflow">Call a nanoflow</enumerationValue>
             </enumerationValues>
+        </property>
+        <property key="timeout" type="integer" defaultValue="1000">
+            <caption>Signature timeout</caption>
+            <category>Events</category>
+            <description>Time (in ms) to wait before considering the signature finished after the pen has stopped touching the pad</description>
+        </property>
+        <property key="afterSignMicroflow" type="microflow" required="false">
+            <caption>After sign microflow</caption>
+            <category>Events</category>
+            <description>The microflow that will be executed after signing</description>
+            <returnType type="Void" />
+        </property>
+        <property key="afterSignNanoflow" type="nanoflow" required="false">
+            <caption>After sign nanoflow</caption>
+            <category>Events</category>
+            <description>The nanoflow that will be executed after signing</description>
+            <returnType type="Void" />
         </property>
     </properties>
 </widget>

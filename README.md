@@ -17,8 +17,7 @@ Add the widget to a dataView. Connect the data URL property to an unlimited Stri
 ## Usage
 
 ![Data source](/assets/signatureImage.gif)
-- After the signature is drawn, on clicking the save button, then the drawn signature is saved or in case the client wants to draw a better signature then he/she has to click the reset button and then the signature pad will be cleared for another signatured to be drawn. 
-- When the image is saved, a pop up appears which indicates, "image saved"
+- After the signature is drawn, it can either be saved automatically after a timeout of three seconds by selecting the saveOnChange option or saved using the default save button when the option for saveOnFormCommit is selected. 
 
 ### Appearance configuration
 ![Data source](/assets/Home.PNG)
@@ -35,13 +34,15 @@ Add the widget to a dataView. Connect the data URL property to an unlimited Stri
 - Grid border width is too set from this portion
 - width unit has two values that is percentage or pixels
 - height unit has three values, percentage of width pixels and then percentage.
+- saving the drawn signature is automatic. it is either by selecting saveOnChange or save on form commit. 
 
 ![Data source](/assets/Events.PNG)
 Under this section, this is where different actions are undertaken when an event for example an onClick event happens.
 - When a microflow is selected, then on an onClick action is triggered, a microflow will be executed.
 In the same way for the Nanoflow, onClick and it is selected, a nanoflow will be executed.
 - If the client selects one of the four options that are stated under the on click section, then the selected option will be executed else, an error message will show up.
-- On Lose focus the image will be saved either automatically when save on change is selected or it will be saved using the save button when the save on form commit option is selected. 
+-  There is a timeout  to wait to consider when the signature is complete. Past this set time, then the signature will be automatically saved. 
+- After signing either a microflow or a nanoflow is executed depending on the clients' choice. 
 
 
 ### Properties
