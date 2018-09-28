@@ -189,14 +189,14 @@ export default class SignatureContainer extends Component<SignatureContainerProp
     }
 
     private timeOut = () => {
-    if (this.props.editable === "default") {
-        setTimeout(this.executeAction, 5000);
-        this.signaturePad.off();
-    } else if (this.props.editable === "never") {
-        this.signaturePad.off();
-    }
+    setTimeout (this.saveImage, 30000);
 }
-
+// if (this.props.editable === "default") {
+//     setTimeout(this.executeAction, 5000);
+//     this.signaturePad.off();
+// } else if (this.props.editable === "never") {
+//     this.signaturePad.off();
+// }
     private static validateProps(props: SignatureContainerProps): string {
     let errorMessage = "";
 

@@ -67,12 +67,13 @@ export class Signature extends Component<SignatureProps, SignatureState> {
             createElement("button", {
                 className: "btn btn-primary",
                 onClick: () => this.getDataUrl(),
-                style: { visibility: this.state.isSet ? "visible" : "hidden" }
+                style: { visibility: this.props.onLoseFocus === "OnChange" && this.state.isSet ?
+                 "visible" : "hidden" }
             }, "Save"),
             createElement(Alert, { message: this.props.alertMessage || "", bootstrapStyle: "danger" })
         );
     }
-
+    // this.props.onLoseFocus === "OnChange" &&
     componentDidMount() {
         if (this.canvasNode) {
             this.canvasNode.style.backgroundColor = this.setbackgroundColor();
